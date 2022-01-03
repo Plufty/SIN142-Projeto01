@@ -2,6 +2,8 @@ import signal
 import os
 import time
 import sys
+
+
 print('Digite o PID do processo para enviar os sinais:')
 PID = int(input())
 print('Enviando sinal de interrupção SIGINT')
