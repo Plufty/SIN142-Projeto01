@@ -3,7 +3,7 @@ import os
 import time
 import sys
 
-def tratarSinal(signalNumber, frame):
+def tratarSinal(signalNumber, frame): #Sinais tratados SIGINT-2 e SIGTERM-15
     if signalNumber == 2:
         print('Sinal tratado SIGINT -' , signalNumber)
     if signalNumber == 15:        
@@ -19,4 +19,4 @@ print('PID:', os.getpid())
 #esperando em um loop infinito
 while True:
     print('Esperando sinal...')
-    signal.pause()
+    signal.pause() 
