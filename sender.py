@@ -8,7 +8,7 @@ from subprocess import check_output
 def get_pid(name): 
     return int(check_output(["pidof","-s",name]))
 
-print('Digite o PID do processo para enviar os sinais:')
+print('Capturando o PID do processo para enviar os sinais:')
 PID = get_pid("python3") #como está sendo rodado em python3, o subprocesso server assumirá esse nome
 print('Enviando sinal de interrupção SIGINT')
 time.sleep(3)
