@@ -1,6 +1,5 @@
 import socket
 import math
-import os
 
 def primos(N):#Função para definir os números primos até o número passado
    A = list(range(2, N)) # a lista inicia de 2 que é o primeiro número primo
@@ -9,6 +8,7 @@ def primos(N):#Função para definir os números primos até o número passado
          for j in range(i**2, N, i):
             if j in A: A.remove(j)
    return A #retorna a lista dos números primos de 2 até o número passado.
+   
 ip = 'localhost'
 porta = 42424
 
@@ -19,10 +19,9 @@ print('Esperando a conexão')
 conn, ender = socket.accept()
 
 print('conectado em', ender)
-PID = os.getpid()
-print(PID)
 
 while 1:
+   #A mensagem é recebida e decodificada
    data = conn.recv(1024)
    if not data:
       print('conexão encerrada')
@@ -30,15 +29,20 @@ while 1:
       break   
    mensagemDecodificada = int(data.decode())
 
-   if mensagemDecodificada == 0: #se o inteiro recebido for igual a 0, é um sinal para encerrar o processo
+   #Aqui é verificado o conteúdo da mensagem recebida, se for igual a 0 é o sinal para encerrar o a conexão
+   if mensagemDecodificada == 0:
       encerramento = "O sinal para encerramento do programa foi recebido. Finalizando programa"
       print(encerramento)
       conn.sendall(str.encode(encerramento))
-      break   
-
-   listaPrimos = primos(mensagemDecodificada)
-   print(listaPrimos)
-   somaPrimos = str(sum(listaPrimos))
-   stringPrimos = "O os números primos de 0 até "+str(mensagemDecodificada)+" são "+ "".join(str(listaPrimos)+" e a soma deles é: "+somaPrimos)
-   dataRetorno = str.encode(stringPrimos)
-   conn.sendall(dataRetorno)
+      conn.close()
+      break
+   elif mensagemDecodificada > 1:
+      #no trecho seguinte, serão calculados os números primos, sua soma e preparada a string de retorno para o cliente
+      listaPrimos = primos(mensagemDecodificada)
+      print(listaPrimos)
+      somaPrimos = str(sum(listaPrimos))
+      stringPrimos = "Os números primos menores que "+str(mensagemDecodificada)+" são "+ "".join(str(listaPrimos)+" e a soma deles é: "+somaPrimos)
+      
+      #A string que será retornada é codificada e enviada
+      data = str.encode(stringPrimos)
+      conn.sendall(data)
