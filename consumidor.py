@@ -2,26 +2,13 @@ import socket
 import math
 import os
 
-def primos(N):
-   # Input: an integer n > 1.
-
-   # Let A be an array of Boolean values, indexed by integers 2 to n, initially all set to true.
-   A = list(range(2, N))
-
-   # for i = 2, 3, 4, ..., not exceeding √n:
+def primos(N):#Função para definir os números primos até o número passado
+   A = list(range(2, N)) # a lista inicia de 2 que é o primeiro número primo
    for i in range(2, int(math.sqrt(N)+1)):
-
-      # if A[i] is true:
       if i in A:
-
-         # for j = i2, i2+i, i2+2i, i2+3i, ..., not exceeding n:
          for j in range(i**2, N, i):
-
-            # A[j] := false.
             if j in A: A.remove(j)
-
-   # Output: all i such that A[i] is true.
-   return A
+   return A #retorna a lista dos números primos de 2 até o número passado.
 ip = 'localhost'
 porta = 42424
 
@@ -41,10 +28,17 @@ while 1:
       print('conexão encerrada')
       conn.close()
       break   
-   mensagemDecodificada = data.decode()
-   listaPrimos = primos(int(mensagemDecodificada))
+   mensagemDecodificada = int(data.decode())
+
+   if mensagemDecodificada == 0: #se o inteiro recebido for igual a 0, é um sinal para encerrar o processo
+      encerramento = "O sinal para encerramento do programa foi recebido. Finalizando programa"
+      print(encerramento)
+      conn.sendall(str.encode(encerramento))
+      break   
+
+   listaPrimos = primos(mensagemDecodificada)
    print(listaPrimos)
    somaPrimos = str(sum(listaPrimos))
-   stringPrimos = "O os números primos de 0 até "+mensagemDecodificada+" são "+ "".join(str(listaPrimos)+" e a soma deles é: "+somaPrimos)
+   stringPrimos = "O os números primos de 0 até "+str(mensagemDecodificada)+" são "+ "".join(str(listaPrimos)+" e a soma deles é: "+somaPrimos)
    dataRetorno = str.encode(stringPrimos)
    conn.sendall(dataRetorno)
